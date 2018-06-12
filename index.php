@@ -127,11 +127,17 @@ switch ($action) {
 //			$mysql->query("CREATE TABLE `" . $targetDatabase . "`.`history_" . $table . "` AS (SELECT * FROM `" . $table . "` WHERE 1=2)");
             $mysql->query("CREATE TABLE " . $history_tablename . " AS (SELECT * FROM `" . $table . "` WHERE 1=2)");
 
-            // Adds required fields to the history table
-            $mysql->query("ALTER TABLE " . $history_tablename .
+            $alter_table_query = "ALTER TABLE " . $history_tablename .
                 "ADD COLUMN `revID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`revID`), " .
                 "ADD COLUMN `revUser` VARCHAR(50) NULL DEFAULT NULL AFTER `revID`, " .
-                "ADD COLUMN `revProcess` ENUM('" . implode($eventTypes, "','") . "') NULL DEFAULT NULL AFTER `revUser`");
+                "ADD COLUMN `revProcess` ENUM('" . implode($eventTypes, "','") . "') NULL DEFAULT NULL AFTER `revUser`";
+            if (strtolower($event) == 'delete') {
+                $alter_table_query .= ",";
+                $alter_table_query .= "ADD COLUMN `deleted_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `revProcess`";
+            }
+
+            // Adds required fields to the history table
+            $mysql->query($alter_table_query);
 
             // Deletes existing triggers with the same name
             $mysql->query("DROP TRIGGER IF EXISTS `" . $table . "_" . ucfirst(strtolower($timing)) . ucfirst(strtolower($event)) . "Trigger`");
