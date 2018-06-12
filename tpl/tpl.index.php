@@ -24,7 +24,7 @@
 				</ul>
 				<ul>
 					<li class="left">Password:</li>
-					<li><input name="password" type="text" value="<?php echo $stdConnection['password']; ?>" /></li>
+					<li><input name="password" type="text" value="<?php echo htmlentities($stdConnection['password']); ?>" /></li>
 				</ul>
 				<ul>
 					<li class="left">Port:</li>

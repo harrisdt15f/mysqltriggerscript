@@ -34,7 +34,7 @@
 	</fieldset>
 	<input name="hostname" type="hidden" value="<?php echo $hostname; ?>" />
 	<input name="username" type="hidden" value="<?php echo $username; ?>" />
-	<input name="password" type="hidden" value="<?php echo $password; ?>" />
+	<input name="password" type="hidden" value="<?php echo htmlentities($password); ?>" />
 	<input name="port" type="hidden" value="<?php echo (string)$port; ?>" />
 </form>
 <script type="text/javascript">
